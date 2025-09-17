@@ -23,23 +23,27 @@ class PortfolioAnalytics with _$PortfolioAnalytics {
   double get totalPortfolioValue => summary.totalDueAmount;
 
   /// Get average deposit amount
-  double get averageDepositAmount => 
-      summary.totalDeposits > 0 ? summary.totalAmountDeposited / summary.totalDeposits : 0;
+  double get averageDepositAmount => summary.totalDeposits > 0
+      ? summary.totalAmountDeposited / summary.totalDeposits
+      : 0;
 
   /// Get portfolio growth percentage
   double get portfolioGrowthPercent {
     if (summary.totalAmountDeposited == 0) return 0;
-    return ((summary.totalDueAmount - summary.totalAmountDeposited) / summary.totalAmountDeposited) * 100;
+    return ((summary.totalDueAmount - summary.totalAmountDeposited) /
+            summary.totalAmountDeposited) *
+        100;
   }
 
   /// Get diversification score (0-100 based on bank distribution)
   double get diversificationScore {
     if (bankDistribution.isEmpty) return 0;
-    
+
     // Calculate entropy-based diversification score
-    final total = bankDistribution.fold(0.0, (sum, bank) => sum + bank.percentage);
+    final total =
+        bankDistribution.fold(0.0, (sum, bank) => sum + bank.percentage);
     if (total == 0) return 0;
-    
+
     double entropy = 0;
     for (final bank in bankDistribution) {
       if (bank.percentage > 0) {
@@ -47,7 +51,7 @@ class PortfolioAnalytics with _$PortfolioAnalytics {
         entropy -= p * (math.log(p) / math.log(2));
       }
     }
-    
+
     final maxEntropy = math.log(bankDistribution.length) / math.log(2);
     return maxEntropy > 0 ? (entropy / maxEntropy) * 100 : 0;
   }

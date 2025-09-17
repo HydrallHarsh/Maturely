@@ -5,9 +5,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'core/constants/app_constants.dart';
 import 'core/utils/hive_bootstrap.dart';
-import 'shared/presentation/routing/app_router.dart';
 import 'shared/presentation/theme/app_theme.dart';
 import 'core/utils/notification_service.dart';
+import 'features/auth/presentation/widgets/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,14 +35,12 @@ class DepositsApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(appRouterProvider);
-
-    return MaterialApp.router(
+    return MaterialApp(
       title: AppConstants.appName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      routerConfig: router,
+      home: const AuthWrapper(), // Use AuthWrapper instead of router
       debugShowCheckedModeBanner: false,
     );
   }

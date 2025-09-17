@@ -13,7 +13,7 @@ abstract class AnalyticsRepository {
   /// Get bank-wise distribution
   Future<List<BankDistribution>> getBankDistribution();
 
-  /// Get status-wise distribution  
+  /// Get status-wise distribution
   Future<List<StatusDistribution>> getStatusDistribution();
 
   /// Get monthly trends over time

@@ -17,7 +17,8 @@ final analyticsUseCaseProvider = Provider<AnalyticsUseCase>((ref) {
 });
 
 // Portfolio analytics provider
-final portfolioAnalyticsProvider = FutureProvider<PortfolioAnalytics>((ref) async {
+final portfolioAnalyticsProvider =
+    FutureProvider<PortfolioAnalytics>((ref) async {
   final useCase = ref.watch(analyticsUseCaseProvider);
   return await useCase.getPortfolioAnalytics();
 });
@@ -29,13 +30,15 @@ final portfolioSummaryProvider = FutureProvider<PortfolioSummary>((ref) async {
 });
 
 // Bank distribution provider
-final bankDistributionProvider = FutureProvider<List<BankDistribution>>((ref) async {
+final bankDistributionProvider =
+    FutureProvider<List<BankDistribution>>((ref) async {
   final useCase = ref.watch(analyticsUseCaseProvider);
   return await useCase.getBankDistribution();
 });
 
 // Status distribution provider
-final statusDistributionProvider = FutureProvider<List<StatusDistribution>>((ref) async {
+final statusDistributionProvider =
+    FutureProvider<List<StatusDistribution>>((ref) async {
   final useCase = ref.watch(analyticsUseCaseProvider);
   return await useCase.getStatusDistribution();
 });
@@ -47,19 +50,22 @@ final monthlyTrendsProvider = FutureProvider<List<MonthlyTrend>>((ref) async {
 });
 
 // Maturity timeline provider
-final maturityTimelineProvider = FutureProvider<List<MaturityTimeline>>((ref) async {
+final maturityTimelineProvider =
+    FutureProvider<List<MaturityTimeline>>((ref) async {
   final useCase = ref.watch(analyticsUseCaseProvider);
   return await useCase.getMaturityTimeline();
 });
 
 // Performance metrics provider
-final performanceMetricsProvider = FutureProvider<PerformanceMetrics>((ref) async {
+final performanceMetricsProvider =
+    FutureProvider<PerformanceMetrics>((ref) async {
   final useCase = ref.watch(analyticsUseCaseProvider);
   return await useCase.getPerformanceMetrics();
 });
 
 // Holder distribution provider
-final holderDistributionProvider = FutureProvider<List<HolderDistribution>>((ref) async {
+final holderDistributionProvider =
+    FutureProvider<List<HolderDistribution>>((ref) async {
   final useCase = ref.watch(analyticsUseCaseProvider);
   return await useCase.getHolderDistribution();
 });
@@ -77,7 +83,8 @@ final bankChartDataProvider = FutureProvider<List<ChartDataPoint>>((ref) async {
   return useCase.getBankChartData(banks);
 });
 
-final trendChartDataProvider = FutureProvider<List<TimeSeriesDataPoint>>((ref) async {
+final trendChartDataProvider =
+    FutureProvider<List<TimeSeriesDataPoint>>((ref) async {
   final useCase = ref.watch(analyticsUseCaseProvider);
   final trends = await useCase.getMonthlyTrends();
   return useCase.getTrendChartData(trends);
