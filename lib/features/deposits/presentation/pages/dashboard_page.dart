@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../domain/entities/deposit.dart';
 import '../providers/deposit_providers.dart';
 import '../providers/lineage_providers.dart';
+import 'deposit_form_page.dart';
 
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
@@ -11,41 +11,15 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Deposits Manager'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: 'Search Deposits',
-            onPressed: () => context.push('/search'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.list_alt),
-            tooltip: 'Log records',
-            onPressed: () async {
-              final repo = ref.read(depositRepositoryProvider);
-              final all = await repo.getAllDeposits();
-              // ignore: avoid_print
-              print('Deposits count: ${all.length}');
-              for (final d in all) {
-                // ignore: avoid_print
-                print('[${d.id}] ${d.srNo} ${d.holdersDisplay} ${d.bankName}');
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Deposits in DB: ${all.length}')),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.storage),
-            tooltip: 'DB Inspector',
-            onPressed: () => context.push('/debug/db'),
-          ),
-        ],
-      ),
       body: const _DepositsList(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/deposit/new'),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const DepositFormPage(),
+            ),
+          );
+        },
         icon: const Icon(Icons.add),
         label: const Text('Add Deposit'),
       ),
@@ -379,9 +353,19 @@ class _DepositsListState extends ConsumerState<_DepositsList> {
                                   onTap: () {
                                     // Navigate to appropriate page based on status
                                     if (d.requiresAction) {
-                                      context.push('/deposit/matured/${d.id}');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Matured deposit: ${d.srNo}')),
+                                      );
                                     } else {
-                                      context.push('/deposit/edit/${d.id}');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Edit deposit: ${d.srNo}')),
+                                      );
                                     }
                                   },
                                 ),

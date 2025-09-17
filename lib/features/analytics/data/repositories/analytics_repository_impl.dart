@@ -31,12 +31,14 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   }) async {
     try {
       final deposits = await _depositRepository.getAllDeposits();
-      final filteredDeposits = _filterDepositsByDate(deposits, startDate, endDate);
+      final filteredDeposits =
+          _filterDepositsByDate(deposits, startDate, endDate);
 
       final summary = await _calculatePortfolioSummary(deposits);
       final bankDistribution = await _calculateBankDistribution(deposits);
       final statusDistribution = await _calculateStatusDistribution(deposits);
-      final monthlyTrends = await _calculateMonthlyTrends(filteredDeposits, startDate, endDate);
+      final monthlyTrends =
+          await _calculateMonthlyTrends(filteredDeposits, startDate, endDate);
       final maturityTimeline = await _calculateMaturityTimeline(deposits);
       final performance = await _calculatePerformanceMetrics(deposits);
       final holderDistribution = await _calculateHolderDistribution(deposits);
@@ -81,7 +83,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     DateTime? endDate,
   }) async {
     final deposits = await _depositRepository.getAllDeposits();
-    final filteredDeposits = _filterDepositsByDate(deposits, startDate, endDate);
+    final filteredDeposits =
+        _filterDepositsByDate(deposits, startDate, endDate);
     return await _calculateMonthlyTrends(filteredDeposits, startDate, endDate);
   }
 
@@ -119,36 +122,42 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
   // Private calculation methods
 
-  List<Deposit> _filterDepositsByDate(List<Deposit> deposits, DateTime? startDate, DateTime? endDate) {
+  List<Deposit> _filterDepositsByDate(
+      List<Deposit> deposits, DateTime? startDate, DateTime? endDate) {
     return deposits.where((deposit) {
       final depositDate = deposit.dateDeposited;
-      
+
       if (startDate != null && depositDate.isBefore(startDate)) {
         return false;
       }
-      
+
       if (endDate != null && depositDate.isAfter(endDate)) {
         return false;
       }
-      
+
       return true;
     }).toList();
   }
 
-  Future<PortfolioSummary> _calculatePortfolioSummary(List<Deposit> deposits) async {
+  Future<PortfolioSummary> _calculatePortfolioSummary(
+      List<Deposit> deposits) async {
     final totalDeposits = deposits.length;
-    final activeDeposits = deposits.where((d) => d.status == DepositStatus.active).length;
-    final maturedDeposits = deposits.where((d) => d.status == DepositStatus.matured).length;
-    final closedDeposits = deposits.where((d) => d.status == DepositStatus.closed).length;
+    final activeDeposits =
+        deposits.where((d) => d.status == DepositStatus.active).length;
+    final maturedDeposits =
+        deposits.where((d) => d.status == DepositStatus.matured).length;
+    final closedDeposits =
+        deposits.where((d) => d.status == DepositStatus.closed).length;
 
-    final totalAmountDeposited = deposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
+    final totalAmountDeposited =
+        deposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
     final totalDueAmount = deposits.fold(0.0, (sum, d) => sum + d.dueAmount);
     final totalInterestEarned = totalDueAmount - totalAmountDeposited;
 
     final now = DateTime.now();
     final depositsDueSoon = deposits.where((d) {
-      return d.status == DepositStatus.active && 
-             d.dueDate.difference(now).inDays <= 30;
+      return d.status == DepositStatus.active &&
+          d.dueDate.difference(now).inDays <= 30;
     }).length;
 
     final uniqueBanks = deposits.map((d) => d.bankName).toSet().length;
@@ -174,9 +183,10 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     );
   }
 
-  Future<List<BankDistribution>> _calculateBankDistribution(List<Deposit> deposits) async {
+  Future<List<BankDistribution>> _calculateBankDistribution(
+      List<Deposit> deposits) async {
     final bankData = <String, List<Deposit>>{};
-    
+
     for (final deposit in deposits) {
       bankData.putIfAbsent(deposit.bankName, () => []).add(deposit);
     }
@@ -187,7 +197,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     int colorIndex = 0;
     for (final entry in bankData.entries) {
       final bankDeposits = entry.value;
-      final bankAmount = bankDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
+      final bankAmount =
+          bankDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
       final percentage = totalAmount > 0 ? (bankAmount / totalAmount) * 100 : 0;
 
       distributions.add(BankDistribution(
@@ -205,9 +216,10 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     return distributions;
   }
 
-  Future<List<StatusDistribution>> _calculateStatusDistribution(List<Deposit> deposits) async {
+  Future<List<StatusDistribution>> _calculateStatusDistribution(
+      List<Deposit> deposits) async {
     final statusData = <DepositStatus, List<Deposit>>{};
-    
+
     for (final deposit in deposits) {
       statusData.putIfAbsent(deposit.status, () => []).add(deposit);
     }
@@ -223,8 +235,10 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
     for (final entry in statusData.entries) {
       final statusDeposits = entry.value;
-      final statusAmount = statusDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
-      final percentage = totalAmount > 0 ? (statusAmount / totalAmount) * 100 : 0;
+      final statusAmount =
+          statusDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
+      final percentage =
+          totalAmount > 0 ? (statusAmount / totalAmount) * 100 : 0;
 
       distributions.add(StatusDistribution(
         status: entry.key,
@@ -239,8 +253,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   }
 
   Future<List<MonthlyTrend>> _calculateMonthlyTrends(
-    List<Deposit> deposits, 
-    DateTime? startDate, 
+    List<Deposit> deposits,
+    DateTime? startDate,
     DateTime? endDate,
   ) async {
     final now = DateTime.now();
@@ -251,18 +265,25 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     var current = DateTime(start.year, start.month);
     var cumulativeAmount = 0.0;
 
-    while (current.isBefore(end) || current.month == end.month && current.year == end.year) {
-      final monthDeposits = deposits.where((d) => 
-        d.dateDeposited.year == current.year && d.dateDeposited.month == current.month
-      ).toList();
+    while (current.isBefore(end) ||
+        current.month == end.month && current.year == end.year) {
+      final monthDeposits = deposits
+          .where((d) =>
+              d.dateDeposited.year == current.year &&
+              d.dateDeposited.month == current.month)
+          .toList();
 
-      final monthMaturities = deposits.where((d) => 
-        d.dueDate.year == current.year && d.dueDate.month == current.month
-      ).toList();
+      final monthMaturities = deposits
+          .where((d) =>
+              d.dueDate.year == current.year &&
+              d.dueDate.month == current.month)
+          .toList();
 
-      final depositsAmount = monthDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
-      final maturityAmount = monthMaturities.fold(0.0, (sum, d) => sum + d.dueAmount);
-      
+      final depositsAmount =
+          monthDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
+      final maturityAmount =
+          monthMaturities.fold(0.0, (sum, d) => sum + d.dueAmount);
+
       cumulativeAmount += depositsAmount;
 
       trends.add(MonthlyTrend(
@@ -294,11 +315,12 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     var current = DateTime(now.year, now.month);
 
     while (current.isBefore(end)) {
-      final monthMaturities = deposits.where((d) => 
-        d.status == DepositStatus.active &&
-        d.dueDate.year == current.year && 
-        d.dueDate.month == current.month
-      ).toList();
+      final monthMaturities = deposits
+          .where((d) =>
+              d.status == DepositStatus.active &&
+              d.dueDate.year == current.year &&
+              d.dueDate.month == current.month)
+          .toList();
 
       final amount = monthMaturities.fold(0.0, (sum, d) => sum + d.dueAmount);
       final depositIds = monthMaturities.map((d) => d.id).toList();
@@ -319,7 +341,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     return timeline.where((t) => t.count > 0).toList();
   }
 
-  Future<PerformanceMetrics> _calculatePerformanceMetrics(List<Deposit> deposits) async {
+  Future<PerformanceMetrics> _calculatePerformanceMetrics(
+      List<Deposit> deposits) async {
     if (deposits.isEmpty) {
       return const PerformanceMetrics(
         averageInterestRate: 0,
@@ -331,26 +354,31 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
       );
     }
 
-    final averageInterestRate = deposits.fold(0.0, (sum, d) => sum + d.interestRate) / deposits.length;
-    
-    final totalAmountDeposited = deposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
+    final averageInterestRate =
+        deposits.fold(0.0, (sum, d) => sum + d.interestRate) / deposits.length;
+
+    final totalAmountDeposited =
+        deposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
     final totalDueAmount = deposits.fold(0.0, (sum, d) => sum + d.dueAmount);
     final totalInterestEarned = totalDueAmount - totalAmountDeposited;
 
-    final activeDeposits = deposits.where((d) => d.status == DepositStatus.active).toList();
+    final activeDeposits =
+        deposits.where((d) => d.status == DepositStatus.active).toList();
     final projectedAnnualIncome = activeDeposits.fold(0.0, (sum, d) {
       final annualRate = d.interestRate / 100;
       return sum + (d.amountDeposited * annualRate);
     });
 
     final averageMaturityPeriod = deposits.fold(0.0, (sum, d) {
-      return sum + d.dueDate.difference(d.dateDeposited).inDays / 365.25;
-    }) / deposits.length;
+          return sum + d.dueDate.difference(d.dateDeposited).inDays / 365.25;
+        }) /
+        deposits.length;
 
     // Simple risk calculation based on bank diversification and deposit concentration
     final bankCount = deposits.map((d) => d.bankName).toSet().length;
     final maxBankExposure = _calculateMaxBankExposure(deposits);
-    final riskScore = _calculateRiskScore(bankCount, maxBankExposure, averageMaturityPeriod);
+    final riskScore =
+        _calculateRiskScore(bankCount, maxBankExposure, averageMaturityPeriod);
     final riskLevel = _getRiskLevel(riskScore);
 
     return PerformanceMetrics(
@@ -363,9 +391,10 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     );
   }
 
-  Future<List<HolderDistribution>> _calculateHolderDistribution(List<Deposit> deposits) async {
+  Future<List<HolderDistribution>> _calculateHolderDistribution(
+      List<Deposit> deposits) async {
     final holderData = <String, List<Deposit>>{};
-    
+
     for (final deposit in deposits) {
       for (final holder in deposit.holders) {
         holderData.putIfAbsent(holder, () => []).add(deposit);
@@ -377,8 +406,10 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
 
     for (final entry in holderData.entries) {
       final holderDeposits = entry.value;
-      final holderAmount = holderDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
-      final percentage = totalAmount > 0 ? (holderAmount / totalAmount) * 100 : 0;
+      final holderAmount =
+          holderDeposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
+      final percentage =
+          totalAmount > 0 ? (holderAmount / totalAmount) * 100 : 0;
 
       distributions.add(HolderDistribution(
         holderName: entry.key,
@@ -392,11 +423,13 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     return distributions;
   }
 
-  Future<List<TopPerformer>> _calculateTopPerformers(List<Deposit> deposits, {int limit = 5}) async {
+  Future<List<TopPerformer>> _calculateTopPerformers(List<Deposit> deposits,
+      {int limit = 5}) async {
     final performers = <TopPerformer>[];
 
     // Highest interest rate
-    final sortedByRate = List<Deposit>.from(deposits)..sort((a, b) => b.interestRate.compareTo(a.interestRate));
+    final sortedByRate = List<Deposit>.from(deposits)
+      ..sort((a, b) => b.interestRate.compareTo(a.interestRate));
     if (sortedByRate.isNotEmpty) {
       final best = sortedByRate.first;
       performers.add(TopPerformer(
@@ -409,7 +442,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     }
 
     // Largest deposit
-    final sortedByAmount = List<Deposit>.from(deposits)..sort((a, b) => b.amountDeposited.compareTo(a.amountDeposited));
+    final sortedByAmount = List<Deposit>.from(deposits)
+      ..sort((a, b) => b.amountDeposited.compareTo(a.amountDeposited));
     if (sortedByAmount.isNotEmpty) {
       final largest = sortedByAmount.first;
       performers.add(TopPerformer(
@@ -422,7 +456,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     }
 
     // Highest maturity amount
-    final sortedByMaturity = List<Deposit>.from(deposits)..sort((a, b) => b.dueAmount.compareTo(a.dueAmount));
+    final sortedByMaturity = List<Deposit>.from(deposits)
+      ..sort((a, b) => b.dueAmount.compareTo(a.dueAmount));
     if (sortedByMaturity.isNotEmpty) {
       final bestMaturity = sortedByMaturity.first;
       performers.add(TopPerformer(
@@ -442,33 +477,46 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     final totalAmount = deposits.fold(0.0, (sum, d) => sum + d.amountDeposited);
 
     for (final deposit in deposits) {
-      bankAmounts[deposit.bankName] = (bankAmounts[deposit.bankName] ?? 0) + deposit.amountDeposited;
+      bankAmounts[deposit.bankName] =
+          (bankAmounts[deposit.bankName] ?? 0) + deposit.amountDeposited;
     }
 
-    final maxAmount = bankAmounts.values.isEmpty ? 0.0 : bankAmounts.values.reduce(math.max);
+    final maxAmount =
+        bankAmounts.values.isEmpty ? 0.0 : bankAmounts.values.reduce(math.max);
     return totalAmount > 0 ? (maxAmount / totalAmount) * 100 : 0;
   }
 
-  double _calculateRiskScore(int bankCount, double maxBankExposure, double avgMaturityPeriod) {
+  double _calculateRiskScore(
+      int bankCount, double maxBankExposure, double avgMaturityPeriod) {
     // Risk score from 0-100 (higher = more risky)
     double score = 0;
 
     // Bank diversification (fewer banks = higher risk)
-    if (bankCount == 1) score += 40;
-    else if (bankCount == 2) score += 25;
-    else if (bankCount <= 4) score += 15;
-    else score += 5;
+    if (bankCount == 1)
+      score += 40;
+    else if (bankCount == 2)
+      score += 25;
+    else if (bankCount <= 4)
+      score += 15;
+    else
+      score += 5;
 
     // Concentration risk (higher concentration = higher risk)
-    if (maxBankExposure > 80) score += 30;
-    else if (maxBankExposure > 60) score += 20;
+    if (maxBankExposure > 80)
+      score += 30;
+    else if (maxBankExposure > 60)
+      score += 20;
     else if (maxBankExposure > 40) score += 10;
 
     // Liquidity risk (longer average maturity = higher risk)
-    if (avgMaturityPeriod > 5) score += 20;
-    else if (avgMaturityPeriod > 3) score += 15;
-    else if (avgMaturityPeriod > 1) score += 10;
-    else score += 5;
+    if (avgMaturityPeriod > 5)
+      score += 20;
+    else if (avgMaturityPeriod > 3)
+      score += 15;
+    else if (avgMaturityPeriod > 1)
+      score += 10;
+    else
+      score += 5;
 
     return math.min(score, 100);
   }

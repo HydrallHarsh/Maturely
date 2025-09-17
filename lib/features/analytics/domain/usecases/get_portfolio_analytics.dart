@@ -72,20 +72,24 @@ class AnalyticsUseCase {
 
   /// Create chart data points from bank distribution
   List<ChartDataPoint> getBankChartData(List<BankDistribution> banks) {
-    return banks.map((bank) => ChartDataPoint(
-      label: bank.bankName,
-      value: bank.percentage,
-      color: bank.color,
-      subtitle: '${bank.depositCount} deposits',
-    )).toList();
+    return banks
+        .map((bank) => ChartDataPoint(
+              label: bank.bankName,
+              value: bank.percentage,
+              color: bank.color,
+              subtitle: '${bank.depositCount} deposits',
+            ))
+        .toList();
   }
 
   /// Create time series data from monthly trends
   List<TimeSeriesDataPoint> getTrendChartData(List<MonthlyTrend> trends) {
-    return trends.map((trend) => TimeSeriesDataPoint(
-      date: trend.month,
-      value: trend.cumulativeAmount,
-      label: '₹${trend.cumulativeAmount.toStringAsFixed(0)}',
-    )).toList();
+    return trends
+        .map((trend) => TimeSeriesDataPoint(
+              date: trend.month,
+              value: trend.cumulativeAmount,
+              label: '₹${trend.cumulativeAmount.toStringAsFixed(0)}',
+            ))
+        .toList();
   }
 }

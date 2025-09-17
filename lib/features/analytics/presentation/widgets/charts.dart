@@ -21,8 +21,8 @@ class BankDistributionChart extends StatelessWidget {
           child: Text(
             'No data available',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
           ),
         ),
       );
@@ -34,17 +34,19 @@ class BankDistributionChart extends StatelessWidget {
         PieChartData(
           sectionsSpace: 2,
           centerSpaceRadius: size * 0.2,
-          sections: banks.map((bank) => PieChartSectionData(
-            color: _parseColor(bank.color),
-            value: bank.percentage,
-            title: '${bank.percentage.toStringAsFixed(1)}%',
-            radius: size * 0.3,
-            titleStyle: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          )).toList(),
+          sections: banks
+              .map((bank) => PieChartSectionData(
+                    color: _parseColor(bank.color),
+                    value: bank.percentage,
+                    title: '${bank.percentage.toStringAsFixed(1)}%',
+                    radius: size * 0.3,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ))
+              .toList(),
         ),
       ),
     );
@@ -53,7 +55,8 @@ class BankDistributionChart extends StatelessWidget {
   Color _parseColor(String colorString) {
     try {
       if (colorString.startsWith('#')) {
-        return Color(int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
+        return Color(
+            int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
       }
       return Colors.blue;
     } catch (e) {
@@ -81,16 +84,20 @@ class MonthlyTrendChart extends StatelessWidget {
           child: Text(
             'No trend data available',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
           ),
         ),
       );
     }
 
-    final maxY = trends.map((t) => t.cumulativeAmount).reduce((a, b) => a > b ? a : b);
+    final maxY =
+        trends.map((t) => t.cumulativeAmount).reduce((a, b) => a > b ? a : b);
     final minX = 0.0;
     final maxX = trends.length.toDouble() - 1;
+
+    // Ensure maxY is never 0 to avoid division by zero
+    final safeMaxY = maxY > 0 ? maxY : 1000.0; // Default minimum scale
 
     return SizedBox(
       height: height,
@@ -101,11 +108,12 @@ class MonthlyTrendChart extends StatelessWidget {
             minX: minX,
             maxX: maxX,
             minY: 0,
-            maxY: maxY * 1.1,
+            maxY: safeMaxY * 1.1,
             lineBarsData: [
               LineChartBarData(
                 spots: trends.asMap().entries.map((entry) {
-                  return FlSpot(entry.key.toDouble(), entry.value.cumulativeAmount);
+                  return FlSpot(
+                      entry.key.toDouble(), entry.value.cumulativeAmount);
                 }).toList(),
                 isCurved: true,
                 color: Theme.of(context).primaryColor,
@@ -148,12 +156,13 @@ class MonthlyTrendChart extends StatelessWidget {
                 ),
               ),
               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles:
+                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
             ),
             gridData: FlGridData(
               show: true,
               drawVerticalLine: false,
-              horizontalInterval: maxY / 5,
+              horizontalInterval: safeMaxY / 5,
             ),
             borderData: FlBorderData(show: false),
           ),
@@ -182,8 +191,8 @@ class StatusDistributionChart extends StatelessWidget {
           child: Text(
             'No status data available',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-            ),
+                  color: Colors.grey,
+                ),
           ),
         ),
       );
@@ -195,17 +204,19 @@ class StatusDistributionChart extends StatelessWidget {
         PieChartData(
           sectionsSpace: 1,
           centerSpaceRadius: size * 0.25,
-          sections: statuses.map((status) => PieChartSectionData(
-            color: _parseColor(status.color),
-            value: status.percentage,
-            title: '${status.count}',
-            radius: size * 0.25,
-            titleStyle: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          )).toList(),
+          sections: statuses
+              .map((status) => PieChartSectionData(
+                    color: _parseColor(status.color),
+                    value: status.percentage,
+                    title: '${status.count}',
+                    radius: size * 0.25,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ))
+              .toList(),
         ),
       ),
     );
@@ -214,7 +225,8 @@ class StatusDistributionChart extends StatelessWidget {
   Color _parseColor(String colorString) {
     try {
       if (colorString.startsWith('#')) {
-        return Color(int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
+        return Color(
+            int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
       }
       return Colors.blue;
     } catch (e) {
@@ -235,40 +247,42 @@ class ChartLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = items.map((item) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              color: _parseColor(item.color),
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              item.label,
-              style: Theme.of(context).textTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          if (item.subtitle.isNotEmpty) ...[
-            const SizedBox(width: 4),
-            Text(
-              '(${item.subtitle})',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
-                fontSize: 10,
+    final children = items
+        .map((item) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: _parseColor(item.color),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      item.label,
+                      style: Theme.of(context).textTheme.bodySmall,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (item.subtitle.isNotEmpty) ...[
+                    const SizedBox(width: 4),
+                    Text(
+                      '(${item.subtitle})',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey,
+                            fontSize: 10,
+                          ),
+                    ),
+                  ],
+                ],
               ),
-            ),
-          ],
-        ],
-      ),
-    )).toList();
+            ))
+        .toList();
 
     if (isHorizontal) {
       return Wrap(
@@ -286,7 +300,8 @@ class ChartLegend extends StatelessWidget {
   Color _parseColor(String colorString) {
     try {
       if (colorString.startsWith('#')) {
-        return Color(int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
+        return Color(
+            int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
       }
       return Colors.blue;
     } catch (e) {

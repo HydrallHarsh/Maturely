@@ -46,8 +46,8 @@ class AnalyticsDashboard extends ConsumerWidget {
               Text(
                 error.toString(),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+                      color: Colors.grey,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -98,8 +98,8 @@ class AnalyticsDashboard extends ConsumerWidget {
         Text(
           'Portfolio Summary',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
         Row(
@@ -202,9 +202,9 @@ class AnalyticsDashboard extends ConsumerWidget {
                 child: Text(
                   title,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: color.withOpacity(0.8),
-                    fontWeight: FontWeight.w500,
-                  ),
+                        color: color.withOpacity(0.8),
+                        fontWeight: FontWeight.w500,
+                      ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -214,16 +214,17 @@ class AnalyticsDashboard extends ConsumerWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPerformanceSection(BuildContext context, PerformanceMetrics performance) {
+  Widget _buildPerformanceSection(
+      BuildContext context, PerformanceMetrics performance) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -233,8 +234,8 @@ class AnalyticsDashboard extends ConsumerWidget {
             Text(
               'Performance Metrics',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -306,8 +307,8 @@ class AnalyticsDashboard extends ConsumerWidget {
                 child: Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+                        color: Colors.grey[600],
+                      ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -317,16 +318,17 @@ class AnalyticsDashboard extends ConsumerWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: itemColor,
-            ),
+                  fontWeight: FontWeight.bold,
+                  color: itemColor,
+                ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDistributionSection(BuildContext context, PortfolioAnalytics analytics) {
+  Widget _buildDistributionSection(
+      BuildContext context, PortfolioAnalytics analytics) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -336,8 +338,8 @@ class AnalyticsDashboard extends ConsumerWidget {
             Text(
               'Distribution Analysis',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -354,12 +356,14 @@ class AnalyticsDashboard extends ConsumerWidget {
                       BankDistributionChart(banks: analytics.bankDistribution),
                       const SizedBox(height: 8),
                       ChartLegend(
-                        items: analytics.bankDistribution.map((bank) => ChartDataPoint(
-                          label: bank.bankName,
-                          value: bank.percentage,
-                          color: bank.color,
-                          subtitle: '${bank.depositCount} deposits',
-                        )).toList(),
+                        items: analytics.bankDistribution
+                            .map((bank) => ChartDataPoint(
+                                  label: bank.bankName,
+                                  value: bank.percentage,
+                                  color: bank.color,
+                                  subtitle: '${bank.depositCount} deposits',
+                                ))
+                            .toList(),
                       ),
                     ],
                   ),
@@ -373,15 +377,18 @@ class AnalyticsDashboard extends ConsumerWidget {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
-                      StatusDistributionChart(statuses: analytics.statusDistribution),
+                      StatusDistributionChart(
+                          statuses: analytics.statusDistribution),
                       const SizedBox(height: 8),
                       ChartLegend(
-                        items: analytics.statusDistribution.map((status) => ChartDataPoint(
-                          label: _getStatusLabel(status.status),
-                          value: status.percentage,
-                          color: status.color,
-                          subtitle: '${status.count} deposits',
-                        )).toList(),
+                        items: analytics.statusDistribution
+                            .map((status) => ChartDataPoint(
+                                  label: _getStatusLabel(status.status),
+                                  value: status.percentage,
+                                  color: status.color,
+                                  subtitle: '${status.count} deposits',
+                                ))
+                            .toList(),
                       ),
                     ],
                   ),
@@ -404,8 +411,8 @@ class AnalyticsDashboard extends ConsumerWidget {
             Text(
               'Portfolio Growth Trend',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             MonthlyTrendChart(trends: trends, height: 250),
@@ -415,7 +422,8 @@ class AnalyticsDashboard extends ConsumerWidget {
     );
   }
 
-  Widget _buildMaturitySection(BuildContext context, List<MaturityTimeline> timeline) {
+  Widget _buildMaturitySection(
+      BuildContext context, List<MaturityTimeline> timeline) {
     if (timeline.isEmpty) {
       return Card(
         child: Padding(
@@ -425,15 +433,15 @@ class AnalyticsDashboard extends ConsumerWidget {
               Text(
                 'Upcoming Maturities',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
               Text(
                 'No deposits maturing in the next 12 months',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+                      color: Colors.grey,
+                    ),
               ),
             ],
           ),
@@ -450,59 +458,69 @@ class AnalyticsDashboard extends ConsumerWidget {
             Text(
               'Upcoming Maturities',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             ...timeline.take(5).map((maturity) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Container(
-                    width: 60,
-                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '${maturity.month.month}/${maturity.month.year.toString().substring(2)}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 60,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '${maturity.month.month}/${maturity.month.year.toString().substring(2)}',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${maturity.count} deposits maturing',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${maturity.count} deposits maturing',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                            Text(
+                              '₹${_formatAmount(maturity.amount)}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '₹${_formatAmount(maturity.amount)}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )),
+                )),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTopPerformersSection(BuildContext context, List<TopPerformer> performers) {
+  Widget _buildTopPerformersSection(
+      BuildContext context, List<TopPerformer> performers) {
     if (performers.isEmpty) return const SizedBox.shrink();
 
     return Card(
@@ -514,37 +532,39 @@ class AnalyticsDashboard extends ConsumerWidget {
             Text(
               'Top Performers',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             ...performers.map((performer) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    _getPerformerIcon(performer.metric),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      performer.title,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _getPerformerIcon(performer.metric),
+                        color: Theme.of(context).primaryColor,
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          performer.title,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                      ),
+                      Text(
+                        performer.displayValue,
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    performer.displayValue,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            )),
+                )),
           ],
         ),
       ),
