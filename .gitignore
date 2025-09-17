@@ -43,3 +43,53 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Security and Credentials - DO NOT COMMIT
+# Google Services and Firebase
+google-services.json
+GoogleService-Info.plist
+firebase-adminsdk-*.json
+service-account-*.json
+**/google-services.json
+**/GoogleService-Info.plist
+
+# API Keys and Secrets
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.key
+*.pem
+*.p12
+*.keystore
+key.properties
+upload-keystore.jks
+android/key.properties
+
+# Database credentials
+database.json
+db-config.json
+
+# OAuth and Auth tokens
+oauth-*.json
+auth-*.json
+credentials.json
+token.json
+refresh_token.json
+
+# AWS credentials
+.aws/
+aws-config.json
+
+# Other sensitive files
+secrets.json
+config.json
+private.json
+*.secret
+*.private
+
+# Temporary and cache files
+*.tmp
+*.temp
+.cache/
