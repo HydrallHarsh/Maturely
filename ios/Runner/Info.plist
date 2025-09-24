@@ -42,6 +42,10 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to scan deposit documents</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs photo library access to select deposit documents</string>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

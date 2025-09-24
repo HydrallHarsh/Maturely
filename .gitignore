@@ -93,3 +93,8 @@ private.json
 *.tmp
 *.temp
 .cache/
+
+# TEMPORARY: Firebase options with hardcoded keys (DO NOT COMMIT)
+# TODO: Fix environment variable configuration to use .env properly
+# Currently using temp_firebase_options.dart as workaround until env vars are working
+*temp_firebase_options.dart

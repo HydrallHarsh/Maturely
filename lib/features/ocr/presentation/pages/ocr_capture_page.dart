@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../providers/ocr_providers.dart';
+import 'ocr_review_page.dart';
 
 class OcrCapturePage extends ConsumerStatefulWidget {
   const OcrCapturePage({super.key});
@@ -83,8 +83,11 @@ class _OcrCapturePageState extends ConsumerState<OcrCapturePage> {
 
           // Navigate to review page
           if (mounted) {
-            context.push(
-                '/ocr/review?imagePath=${Uri.encodeComponent(imagePath)}');
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => OcrReviewPage(imagePath: imagePath),
+              ),
+            );
           }
         }
       }

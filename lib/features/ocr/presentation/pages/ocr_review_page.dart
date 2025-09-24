@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../providers/ocr_providers.dart';
+import '../../../deposits/presentation/pages/deposit_form_page.dart';
 
 class OcrReviewPage extends ConsumerStatefulWidget {
   final String imagePath;
@@ -69,21 +69,26 @@ class _OcrReviewPageState extends ConsumerState<OcrReviewPage> {
     }
 
     // Navigate to deposit form with pre-filled data
-    final queryParams = {
-      'srNo': _srNoCtrl.text,
-      'holderName': _holderCtrl.text,
-      'bankName': _bankCtrl.text,
-      'accountNumber': _accountCtrl.text,
-      'fdrNo': _fdrCtrl.text,
-      'amountDeposited': _amountCtrl.text,
-      'dueAmount': _dueAmountCtrl.text,
-      'dateDeposited': _dateDeposited!.millisecondsSinceEpoch.toString(),
-      'dueDate': _dueDate!.millisecondsSinceEpoch.toString(),
-    };
-
-    final uri = Uri(path: '/deposit/new', queryParameters: queryParams);
     if (mounted) {
-      context.push(uri.toString());
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const DepositFormPage(),
+          settings: RouteSettings(
+            arguments: {
+              'srNo': _srNoCtrl.text,
+              'holderName': _holderCtrl.text,
+              'bankName': _bankCtrl.text,
+              'accountNumber': _accountCtrl.text,
+              'fdrNo': _fdrCtrl.text,
+              'amountDeposited': _amountCtrl.text,
+              'dueAmount': _dueAmountCtrl.text,
+              'dateDeposited':
+                  _dateDeposited!.millisecondsSinceEpoch.toString(),
+              'dueDate': _dueDate!.millisecondsSinceEpoch.toString(),
+            },
+          ),
+        ),
+      );
     }
   }
 
@@ -109,7 +114,7 @@ class _OcrReviewPageState extends ConsumerState<OcrReviewPage> {
               // Clear state and go back to main navigation
               ref.read(ocrResultProvider.notifier).state = null;
               ref.read(extractedDataProvider.notifier).state = null;
-              context.go('/');
+              Navigator.of(context).popUntil((route) => route.isFirst);
             },
             child: const Text('Cancel'),
           ),
@@ -262,7 +267,8 @@ class _OcrReviewPageState extends ConsumerState<OcrReviewPage> {
                               ref.read(ocrResultProvider.notifier).state = null;
                               ref.read(extractedDataProvider.notifier).state =
                                   null;
-                              context.go('/');
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
                             },
                             icon: const Icon(Icons.camera_alt),
                             label: const Text('Retake'),
