@@ -33,6 +33,14 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Generated files (Freezed, Riverpod, Build Runner)
+**/*.freezed.dart
+**/*.g.dart
+**/*.gr.dart
+**/*.config.dart
+**/*.mocks.dart
+*.generated.dart
+
 # Symbolication related
 app.*.symbols
 
@@ -89,12 +97,52 @@ private.json
 *.secret
 *.private
 
+# Development and debugging files
+*.log.*
+debug.log
+crash.log
+flutter_*.log
+.flutter-devtools/
+
+# IDE and editor files
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.vscode/launch.json
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/misc.xml
+
+# OS specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Hive database files (local storage)
+*.hive
+*.hive.lock
+*.hive_generator.lock
+/data/
+
 # Temporary and cache files
 *.tmp
 *.temp
 .cache/
+temp/
 
 # TEMPORARY: Firebase options with hardcoded keys (DO NOT COMMIT)
 # TODO: Fix environment variable configuration to use .env properly
 # Currently using temp_firebase_options.dart as workaround until env vars are working
 *temp_firebase_options.dart
+temp_firebase_options.dart
+firebase_options_temp.dart
+
+# Environment variable examples and templates
+.env.example
+.env.template
+.env.sample
