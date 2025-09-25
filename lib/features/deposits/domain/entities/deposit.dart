@@ -1,5 +1,5 @@
+import 'dart:math' as math;
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 part 'deposit.freezed.dart';
 part 'deposit.g.dart';
 
@@ -147,12 +147,28 @@ class Deposit with _$Deposit {
   /// Get the interest amount
   double get interestAmount => dueAmount - amountDeposited;
 
-  /// Get the interest rate (approximate)
+  /// Get the effective annual interest rate (%)
+  /// Uses compound interest formula: Rate = ((FV/PV)^(1/t) - 1) * 100
+  /// Where: FV = Due Amount, PV = Deposited Amount, t = time in years
   double get interestRate {
-    if (amountDeposited == 0) return 0;
-    final years = maturityPeriodDays / 365;
-    if (years == 0) return 0;
-    return (interestAmount / amountDeposited) / years * 100;
+    if (amountDeposited <= 0) return 0;
+    if (dueAmount <= amountDeposited) return 0;
+
+    final years = maturityPeriodDays / 365.0;
+    if (years <= 0) return 0;
+
+    // Compound interest formula for effective annual rate
+    final rate = (math.pow(dueAmount / amountDeposited, 1 / years) - 1) * 100;
+    return rate.toDouble();
+  }
+
+  /// Get simple interest rate (%) - Alternative calculation
+  /// Formula: (Interest / Principal) / Years * 100
+  double get simpleInterestRate {
+    if (amountDeposited <= 0) return 0;
+    final years = maturityPeriodDays / 365.0;
+    if (years <= 0) return 0;
+    return (interestAmount / amountDeposited / years) * 100;
   }
 
   /// Basic validation: returns a list of human-readable issues
